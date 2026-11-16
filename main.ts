@@ -1,14 +1,15 @@
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { parse } from './parse.js';
 
-const inDir = process.argv.length > 2 ? process.argv[2] : '/input';
-const outDir = process.argv.length > 3 ? process.argv[3] : '/output';
+const args = process.argv;
+const inputDir = args.length > 2 ? args[2] : '/input';
+const outputDir = args.length > 3 ? args[3] : '/output';
 
-const raw = readFileSync(inDir + '/cases.json', 'utf8');
-const items = JSON.parse(raw);
-const rendered = new Array(items.length);
-for (let idx = 0; idx < items.length; idx++) {
-  rendered[idx] = parse(items[idx].markdown);
+const casesText = readFileSync(inputDir + '/cases.json', 'utf8');
+const cases = JSON.parse(casesText);
+const outputs = new Array(cases.length);
+for (let n = 0; n < cases.length; n++) {
+  outputs[n] = parse(cases[n].markdown);
 }
-mkdirSync(outDir, { recursive: true });
-writeFileSync(outDir + '/html.json', JSON.stringify(rendered));
+mkdirSync(outputDir, { recursive: true });
+writeFileSync(outputDir + '/html.json', JSON.stringify(outputs));
